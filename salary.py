@@ -31,12 +31,12 @@ def get_salary_info_for_HH(response):
         vacancies_found = vacancies['found']
         for vacancy in vacancy:
             salary_currency = vacancy['salary']['currency']
-            if salary_currency == 'RUR':
-                salary_from = vacancy['salary']['from']
-                salaries_from.append(salary_from)
-                salary_to = vacancy['salary']['to']
-                salaries_to.append(salary_to)
-            None        
+            if salary_currency != 'RUR':
+                continue
+            salary_from = vacancy['salary']['from']
+            salaries_from.append(salary_from)
+            salary_to = vacancy['salary']['to']
+            salaries_to.append(salary_to)     
     return {'salary_from': salaries_from, 
             'salary_to': salaries_to,
             'found': vacancies_found}
