@@ -42,9 +42,9 @@ def get_salaries_HH(response):
                 salaries_from.append(salary_from)
                 salary_to = vacancy['salary']['to']
                 salaries_to.append(salary_to)
-            None       
-    return {'salaries_from': salaries_from,
-            'salaries_to': salaries_to,
+            None        
+    return {'salary_from': salaries_from, 
+            'salary_to': salaries_to,
             'found': vacancies_found}
 
 
