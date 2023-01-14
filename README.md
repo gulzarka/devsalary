@@ -19,4 +19,7 @@ Once you get the token, save it in a file `access_token.env` with variable `SUPE
 
 ## How to use
 
-just run your file in the terminal.
+just run your file in the terminal:  
+```
+$ python3 salary.py
+```
