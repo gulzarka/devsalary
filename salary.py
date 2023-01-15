@@ -43,11 +43,9 @@ def get_salaries_HH(response):
                 salary_to = vacancy['salary']['to']
                 salaries_to.append(salary_to)
             None
-    return {
-            'salaries_from': salaries_from,
+    return {'salaries_from': salaries_from,
             'salaries_to': salaries_to,
-            'found': vacancies_found
-            }
+            'found': vacancies_found}
 
 
 def calculate_average_salary(salary_from, salary_to):
@@ -64,9 +62,10 @@ def get_vacancy_statistics(salaries, language):
     average_salaries = []
     vacancies_found = salaries['found']
     salaries_from = salaries['salaries_from']
+    salaries_to = salaries['salaries_to']
     for salary_from in salaries_from:
         salary_from = salary_from
-    for salary_to in salaries['salaries_to']:
+    for salary_to in salaries_to:
         salary_to = salary_to
         average_salary = calculate_average_salary(salary_from, salary_to)
         average_salaries.append(average_salary)
