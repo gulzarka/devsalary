@@ -40,7 +40,10 @@ def calculate_average_salary(salary_from, salary_to):
 
 
 def calculate_total_average_salary(average_salaries):
-    total_average_salary = sum(average_salaries) // len(average_salaries)
+    try:
+        total_average_salary = sum(average_salaries) // len(average_salaries)
+    except ZeroDivisionError:
+        return 0
     return total_average_salary
 
 
@@ -51,26 +54,20 @@ def predict_rubl_salaries_HH(response, language):
         vacancies = vacancies['items']
         for vacancy in vacancies:
             salary_currency = vacancy['salary']['currency']
-            if salary_currency == 'RUR':
-                salary_from = vacancy['salary']['from']
-                salary_to = vacancy['salary']['to']
-                average_salary = calculate_average_salary(salary_from, salary_to)
-                average_salaries.append(average_salary)
-            None
+            if not salary_currency == 'RUR':
+                return None
+            salary_from = vacancy['salary']['from']
+            salary_to = vacancy['salary']['to']
+            average_salary = calculate_average_salary(salary_from, salary_to)
+            average_salaries.append(average_salary)
         total_average_salary = calculate_total_average_salary(average_salaries)
-        salary_statistics = {language:
-                         {'vacancies_found': vacancies_found,
-                          'vacancies_processed': len(average_salaries),
-                          'average_salary': total_average_salary}}
+        salary_statistics = {language: {
+                            'vacancies_found': vacancies_found,
+                            'vacancies_processed': len(average_salaries),
+                            'average_salary': total_average_salary
+                            }
+                            }
     return salary_statistics
-
-
-def parse_table_colomns(language, salary_stat):
-    lang = language
-    found = salary_stat['vacancies_found']
-    salary = salary_stat['average_salary']
-    processed = salary_stat['vacancies_processed']
-    return lang, found, processed, salary
 
 
 def get_stat_table_HH():
@@ -85,7 +82,10 @@ def get_stat_table_HH():
             get_response_all_pages_HH(language), language
             )
         for language, salary_stat in salaries.items():
-            lang, found, processed, salary = parse_table_colomns(language, salary_stat)
+            lang = language
+            found = salary_stat['vacancies_found']
+            salary = salary_stat['average_salary']
+            processed = salary_stat['vacancies_processed']
             stat_table.append((lang, found, processed, salary))
             table_instance = AsciiTable(stat_table, 'Head Hunter Moscow')
     return table_instance.table
@@ -126,7 +126,7 @@ def predict_rubl_salaries_SJ(response, language):
             salary_to = vacancy['payment_to']
             average_salary = calculate_average_salary(salary_from, salary_to)
             average_salaries.append(average_salary)
-    total_average_salary = calculate_average_salary(average_salaries)
+    total_average_salary = calculate_total_average_salary(average_salaries)
     salary_statistics = {language:
                          {'vacancies_found': vacancies_found,
                           'vacancies_processed': len(average_salaries),
@@ -146,7 +146,10 @@ def get_stat_table_SJ(access_token):
             get_response_all_pages_SJ(language, access_token), language
             )
         for language, salary_stat in salaries.items():
-            lang, found, processed, salary = parse_table_colomns(language, salary_stat)
+            lang = language
+            found = salary_stat['vacancies_found']
+            salary = salary_stat['average_salary']
+            processed = salary_stat['vacancies_processed']
             stat_table.append((lang, found, processed, salary))
             table_instance = AsciiTable(stat_table, 'Head Hunter Moscow')
     return table_instance.table
