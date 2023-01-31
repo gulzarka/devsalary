@@ -7,7 +7,7 @@ LANGS = ['Python', 'Java Script', 'Ruby', 'Go', 'C',
          'C++', 'CSS', 'PHP', 'C#', 'Java']
 
 
-def get_response_all_pages_HH(language):
+def get_response_all_pages_hh(language):
     url = 'https://api.hh.ru/vacancies/'
     moscow_code = 1
     searching_period = 1
@@ -47,7 +47,7 @@ def calculate_total_average_salary(average_salaries):
     return total_average_salary
 
 
-def predict_rubl_salaries_HH(response, language):
+def predict_rubl_salaries_hh(response, language):
     average_salaries = []
     for vacancies in response:
         vacancies_found = vacancies['found']
@@ -70,7 +70,7 @@ def predict_rubl_salaries_HH(response, language):
     return salary_statistics
 
 
-def get_stat_table_HH():
+def get_stat_table_hh():
     stat_table = [(
                     'Programming language',
                     'Vacancies found',
@@ -78,8 +78,8 @@ def get_stat_table_HH():
                     'Average salary'
                 )]
     for language in LANGS:
-        salaries = predict_rubl_salaries_HH(
-            get_response_all_pages_HH(language), language
+        salaries = predict_rubl_salaries_hh(
+            get_response_all_pages_hh(language), language
             )
         for language, salary_stat in salaries.items():
             lang = language
@@ -91,7 +91,7 @@ def get_stat_table_HH():
     return table_instance.table
 
 
-def get_response_all_pages_SJ(language, access_token):
+def get_response_all_pages_sj(language, access_token):
     url = 'https://api.superjob.ru/2.0/vacancies/'
     moscow_code = 4
     page = 0
@@ -109,14 +109,15 @@ def get_response_all_pages_SJ(language, access_token):
         page_response.raise_for_status()
         page_payload = page_response.json()
         vacancy_count = page_payload['total']
-        if not vacancy_count < 20:
+        vacancy_per_page = 20
+        if not vacancy_count < vacancy_per_page:
             pages_number = int(vacancy_count*0.1)
             pages_response.append(page_payload)
             page += 1
     return pages_response
 
 
-def predict_rubl_salaries_SJ(response, language):
+def predict_rubl_salaries_sj(response, language):
     average_salaries = []
     for vacancies in response:
         vacancies = vacancies['objects']
@@ -134,7 +135,7 @@ def predict_rubl_salaries_SJ(response, language):
     return salary_statistics
 
 
-def get_stat_table_SJ(access_token):
+def get_stat_table_sj(access_token):
     stat_table = [(
                     'Programming language',
                     'Vacancies found',
@@ -142,8 +143,8 @@ def get_stat_table_SJ(access_token):
                     'Average salary'
                 )]
     for language in LANGS:
-        salaries = predict_rubl_salaries_SJ(
-            get_response_all_pages_SJ(language, access_token), language
+        salaries = predict_rubl_salaries_sj(
+            get_response_all_pages_sj(language, access_token), language
             )
         for language, salary_stat in salaries.items():
             lang = language
@@ -158,8 +159,8 @@ def get_stat_table_SJ(access_token):
 def main():
     load_dotenv('access_token.env')
     sj_access_token = os.environ['SUPER_JOB_TOKEN']
-    print(get_stat_table_SJ(sj_access_token))
-    print(get_stat_table_HH())
+    print(get_stat_table_sj(sj_access_token))
+    print(get_stat_table_hh())
 
 
 if __name__ == "__main__":
