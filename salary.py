@@ -36,8 +36,7 @@ def calculate_average_salary(salary_from, salary_to):
         return round(salary_to * 0.8)
     if salary_from and salary_to:
         return (salary_from + salary_to) // 2
-    if not salary_from  and not salary_to:
-        return False
+    return False
 
     
 
@@ -62,6 +61,8 @@ def predict_rubl_salaries_hh(response, language):
             salary_from = vacancy['salary']['from']
             salary_to = vacancy['salary']['to']
             average_salary = calculate_average_salary(salary_from, salary_to)
+            if not average_salary:
+                continue
             average_salaries.append(average_salary)
         total_average_salary = calculate_total_average_salary(average_salaries)
         salary_statistics = {language: {
@@ -128,6 +129,8 @@ def predict_rubl_salaries_sj(response, language):
             salary_from = vacancy['payment_from']
             salary_to = vacancy['payment_to']
             average_salary = calculate_average_salary(salary_from, salary_to)
+            if not average_salary:
+                continue
             average_salaries.append(average_salary)
     total_average_salary = calculate_total_average_salary(average_salaries)
     salary_statistics = {language:
