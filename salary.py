@@ -36,7 +36,10 @@ def calculate_average_salary(salary_from, salary_to):
         return round(salary_to * 0.8)
     if salary_from and salary_to:
         return (salary_from + salary_to) // 2
-    return False
+    if not salary_from  and not salary_to:
+        return False
+
+    
 
 
 def calculate_total_average_salary(average_salaries):
@@ -97,10 +100,10 @@ def get_response_all_pages_sj(language, access_token):
     page = 0
     pages_number = 1
     pages_response = []
-    only_with_salary = 1
+    vacancy_per_page = 10
     programmer_id = 48
     params = {'town': moscow_code, 'keyword': language,
-              'no_agreement': only_with_salary,
+              'count': vacancy_per_page,
               'page': page, 'currency': 'rub',
               'catalogues': programmer_id}
     headers = {'X-Api-App-Id': access_token}
@@ -109,9 +112,8 @@ def get_response_all_pages_sj(language, access_token):
         page_response.raise_for_status()
         page_payload = page_response.json()
         vacancy_count = page_payload['total']
-        vacancy_per_page = 20
         if not vacancy_count < vacancy_per_page:
-            pages_number = int(vacancy_count*0.1)
+            pages_number = int(vacancy_count/vacancy_per_page)
             pages_response.append(page_payload)
             page += 1
     return pages_response
